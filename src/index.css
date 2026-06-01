@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Montserrat", sans-serif;
+  --color-gummy-pink: #d14d85;
+  --color-gummy-light-pink: #fce4ec;
+  --color-gummy-green: #9cdb6d;
+  --color-gummy-dark-purple: #3f3d56;
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-white text-slate-900 antialiased;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.text-3d-pink {
+  color: white;
+  text-shadow: 
+    -2px -2px 0 #d14d85,  
+     2px -2px 0 #d14d85,
+    -2px  2px 0 #d14d85,
+     2px  2px 0 #d14d85,
+     0px  8px 0px #c03a70,
+     0px  12px 15px rgba(0,0,0,0.4);
+}
+
+.btn-green-gradient {
+  background: linear-gradient(to bottom, #9cdb6d 0%, #7cb342 100%);
+  box-shadow: 0 4px 0 #558b2f;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-green-gradient:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #558b2f;
+}
+
+.btn-pink-gradient {
+  background: linear-gradient(to bottom, #ff7eb3 0%, #e91e63 100%);
+  box-shadow: 0 4px 0 #c2185b;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-pink-gradient:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #c2185b;
+}
+
+.cloud-badge {
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* Actually, the cloud badge is more like a scalloped circle */
+.scalloped-badge {
+  background: white;
+  border: 2px solid #00bcd4;
+  mask: radial-gradient(12px at 12px 12px, #0000 98%, #000) -12px -12px;
+}
