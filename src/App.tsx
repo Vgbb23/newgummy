@@ -252,13 +252,13 @@ const InfluencerCarousel = () => (
           name: '@anny_ferreira10', 
           product: 'Gummy Hair® ZERO', 
           productImage: 'https://i.ibb.co/xSk5wW9y/image.png',
-          video: 'https://res.cloudinary.com/dg1tim1ve/video/upload/v1778214905/Gummy___a_marca_refer%C3%AAncia_em_vitaminas_em_goma-1_whei2w.mp4' 
+          video: 'https://www.gummy.com.br/cdn/shop/videos/c/vp/5ad7e92200c545ef8469a42909630f35/5ad7e92200c545ef8469a42909630f35.SD-480p-0.9Mbps-47264563.mp4?v=0' 
         },
         { 
           name: '@dudaa.guerra', 
           product: 'Gummy® Vinagre', 
           productImage: 'https://i.ibb.co/HDxQ7P5m/image.png',
-          video: 'https://res.cloudinary.com/dg1tim1ve/video/upload/v1778214904/Gummy___a_marca_refer%C3%AAncia_em_vitaminas_em_goma_mf6xf1.mp4' 
+          video: 'https://www.gummy.com.br/cdn/shop/videos/c/vp/2e512182a3354cb9a2cb8b4f94a78ad4/2e512182a3354cb9a2cb8b4f94a78ad4.SD-480p-0.9Mbps-45007457.mp4?v=0' 
         },
       ].map((item, i) => (
         <div key={i} className="w-[48%] flex flex-col gap-3">
