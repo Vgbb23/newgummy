@@ -36,6 +36,8 @@ import {
   Trash2,
   X,
   Sparkles,
+  Play,
+  Pause,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { persistFullQuery, mergeStoredQueryParams } from './utils/campaignQuery';
@@ -244,47 +246,129 @@ const ProductBenefits = () => (
   </section>
 );
 
-const InfluencerCarousel = () => (
-  <section className="bg-gummy-light-pink py-8 px-4">
-    <div className="flex gap-3 justify-between">
-      {[
-        { 
-          name: '@anny_ferreira10', 
-          product: 'Gummy Hair® ZERO', 
-          productImage: 'https://i.ibb.co/xSk5wW9y/image.png',
-          video: 'https://www.gummy.com.br/cdn/shop/videos/c/vp/5ad7e92200c545ef8469a42909630f35/5ad7e92200c545ef8469a42909630f35.SD-480p-0.9Mbps-47264563.mp4?v=0' 
-        },
-        { 
-          name: '@dudaa.guerra', 
-          product: 'Gummy® Vinagre', 
-          productImage: 'https://i.ibb.co/HDxQ7P5m/image.png',
-          video: 'https://www.gummy.com.br/cdn/shop/videos/c/vp/2e512182a3354cb9a2cb8b4f94a78ad4/2e512182a3354cb9a2cb8b4f94a78ad4.SD-480p-0.9Mbps-45007457.mp4?v=0' 
-        },
-      ].map((item, i) => (
-        <div key={i} className="w-[48%] flex flex-col gap-3">
-          <div className="rounded-[30px] overflow-hidden aspect-[9/16] relative shadow-lg bg-slate-200">
-            <video 
-              src={item.video} 
-              className="w-full h-full object-cover" 
-              autoPlay 
-              muted 
-              loop 
-              playsInline
-            />
-            <div className="absolute inset-0 bg-black/5 pointer-events-none" />
-          </div>
-          <div className="flex items-center gap-2 px-1">
-            <img src={item.productImage} className="w-8 h-8 rounded-full object-contain bg-white p-1" referrerPolicy="no-referrer" />
-            <div className="flex flex-col overflow-hidden">
-              <span className="text-[10px] font-black text-slate-800 truncate">{item.name}</span>
-              <span className="text-[8px] text-slate-500 font-medium truncate">{item.product}</span>
-            </div>
-          </div>
+const InfluencerVideoCard = ({
+  name,
+  product,
+  productImage,
+  video,
+  isActive,
+  onActivate,
+}: {
+  name: string;
+  product: string;
+  productImage: string;
+  video: string;
+  isActive: boolean;
+  onActivate: () => void;
+}) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    if (!isActive) {
+      el.pause();
+      el.muted = true;
+      setPlaying(false);
+    }
+  }, [isActive]);
+
+  const togglePlay = async () => {
+    const el = videoRef.current;
+    if (!el) return;
+
+    if (playing) {
+      el.pause();
+      setPlaying(false);
+      return;
+    }
+
+    onActivate();
+    el.muted = false;
+    el.volume = 1;
+    try {
+      await el.play();
+      setPlaying(true);
+    } catch {
+      setPlaying(false);
+    }
+  };
+
+  return (
+    <div className="w-[48%] flex flex-col gap-3">
+      <button
+        type="button"
+        onClick={togglePlay}
+        aria-label={playing ? `Pausar vídeo de ${name}` : `Reproduzir vídeo de ${name}`}
+        className="rounded-[30px] overflow-hidden aspect-[9/16] relative shadow-lg bg-slate-200 group cursor-pointer border-0 p-0 text-left"
+      >
+        <video
+          ref={videoRef}
+          src={video}
+          className="w-full h-full object-cover pointer-events-none"
+          loop
+          playsInline
+          preload="metadata"
+        />
+        <div
+          className={`absolute inset-0 transition-colors ${
+            playing ? 'bg-transparent' : 'bg-black/35'
+          }`}
+        />
+        <div
+          className={`absolute inset-0 flex items-center justify-center transition-opacity ${
+            playing ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
+          }`}
+        >
+          <span className="w-14 h-14 rounded-full bg-white/90 text-gummy-dark-purple flex items-center justify-center shadow-lg">
+            {playing ? <Pause size={22} fill="currentColor" /> : <Play size={22} fill="currentColor" className="ml-0.5" />}
+          </span>
         </div>
-      ))}
+      </button>
+      <div className="flex items-center gap-2 px-1">
+        <img src={productImage} className="w-8 h-8 rounded-full object-contain bg-white p-1" referrerPolicy="no-referrer" />
+        <div className="flex flex-col overflow-hidden">
+          <span className="text-[10px] font-black text-slate-800 truncate">{name}</span>
+          <span className="text-[8px] text-slate-500 font-medium truncate">{product}</span>
+        </div>
+      </div>
     </div>
-  </section>
-);
+  );
+};
+
+const InfluencerCarousel = () => {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const items = [
+    {
+      name: '@anny_ferreira10',
+      product: 'Gummy Hair® ZERO',
+      productImage: 'https://i.ibb.co/xSk5wW9y/image.png',
+      video: 'https://www.gummy.com.br/cdn/shop/videos/c/vp/5ad7e92200c545ef8469a42909630f35/5ad7e92200c545ef8469a42909630f35.SD-480p-0.9Mbps-47264563.mp4?v=0',
+    },
+    {
+      name: '@dudaa.guerra',
+      product: 'Gummy® Vinagre',
+      productImage: 'https://i.ibb.co/HDxQ7P5m/image.png',
+      video: 'https://www.gummy.com.br/cdn/shop/videos/c/vp/2e512182a3354cb9a2cb8b4f94a78ad4/2e512182a3354cb9a2cb8b4f94a78ad4.SD-480p-0.9Mbps-45007457.mp4?v=0',
+    },
+  ];
+
+  return (
+    <section className="bg-gummy-light-pink py-8 px-4">
+      <div className="flex gap-3 justify-between">
+        {items.map((item, i) => (
+          <InfluencerVideoCard
+            key={item.name}
+            {...item}
+            isActive={activeIndex === i}
+            onActivate={() => setActiveIndex(i)}
+          />
+        ))}
+      </div>
+    </section>
+  );
+};
 
 const CategoriesGrid = () => (
   <section className="bg-gummy-light-pink py-10 px-6 flex flex-col gap-6">
