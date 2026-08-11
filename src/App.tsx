@@ -262,16 +262,58 @@ const InfluencerVideoCard = ({
   onActivate: () => void;
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const playingRef = useRef(false);
   const [playing, setPlaying] = useState(false);
+
+  const setIsPlaying = (value: boolean) => {
+    playingRef.current = value;
+    setPlaying(value);
+  };
 
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
-    if (!isActive) {
-      el.pause();
+
+    let cancelled = false;
+    let stopTimer: number | undefined;
+
+    const runPreview = async () => {
+      if (cancelled || playingRef.current) return;
       el.muted = true;
-      setPlaying(false);
+      try {
+        await el.play();
+        if (cancelled || playingRef.current) {
+          el.pause();
+          return;
+        }
+        stopTimer = window.setTimeout(() => {
+          if (cancelled || playingRef.current) return;
+          el.pause();
+        }, 1000);
+      } catch {
+        // preview autoplay bloqueado — o clique do usuário ainda funciona
+      }
+    };
+
+    if (el.readyState >= 2) {
+      void runPreview();
+    } else {
+      el.addEventListener('loadeddata', runPreview, { once: true });
     }
+
+    return () => {
+      cancelled = true;
+      if (stopTimer) window.clearTimeout(stopTimer);
+      el.removeEventListener('loadeddata', runPreview);
+    };
+  }, []);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el || isActive || !playingRef.current) return;
+    el.pause();
+    el.muted = true;
+    setIsPlaying(false);
   }, [isActive]);
 
   const togglePlay = async () => {
@@ -280,18 +322,19 @@ const InfluencerVideoCard = ({
 
     if (playing) {
       el.pause();
-      setPlaying(false);
+      setIsPlaying(false);
       return;
     }
 
     onActivate();
+    el.currentTime = 0;
     el.muted = false;
     el.volume = 1;
     try {
       await el.play();
-      setPlaying(true);
+      setIsPlaying(true);
     } catch {
-      setPlaying(false);
+      setIsPlaying(false);
     }
   };
 
@@ -307,13 +350,14 @@ const InfluencerVideoCard = ({
           ref={videoRef}
           src={video}
           className="w-full h-full object-cover pointer-events-none"
+          muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
         />
         <div
           className={`absolute inset-0 transition-colors ${
-            playing ? 'bg-transparent' : 'bg-black/35'
+            playing ? 'bg-transparent' : 'bg-black/25'
           }`}
         />
         <div
