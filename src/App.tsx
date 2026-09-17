@@ -388,13 +388,13 @@ const InfluencerCarousel = () => {
       name: '@anny_ferreira10',
       product: 'Gummy Hair® ZERO',
       productImage: 'https://i.ibb.co/xSk5wW9y/image.png',
-      video: 'https://www.gummy.com.br/cdn/shop/videos/c/vp/5ad7e92200c545ef8469a42909630f35/5ad7e92200c545ef8469a42909630f35.SD-480p-0.9Mbps-47264563.mp4?v=0',
+      video: 'https://d2az8otjr0j19j.cloudfront.net/templates/007/167/273/twig/static/videos/home/hair.mp4',
     },
     {
       name: '@dudaa.guerra',
       product: 'Gummy® Vinagre',
       productImage: 'https://i.ibb.co/HDxQ7P5m/image.png',
-      video: 'https://www.gummy.com.br/cdn/shop/videos/c/vp/2e512182a3354cb9a2cb8b4f94a78ad4/2e512182a3354cb9a2cb8b4f94a78ad4.SD-480p-0.9Mbps-45007457.mp4?v=0',
+      video: 'https://d2az8otjr0j19j.cloudfront.net/templates/007/167/273/twig/static/videos/home/apple-vinegar.mp4',
     },
   ];
 
